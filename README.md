@@ -34,3 +34,22 @@ The app will run on http://localhost:5001
 
 - Homepage with navigation
 - Login and Register links (non-functional placeholders)
+
+## Database Schema
+
+The project uses MySQL with these tables below
+
+### Main Tables:
+- `users` - User authentication and roles
+- `categories` - Ticket categories (IT, Facilities, etc.)
+- `ticket_status` - Ticket workflow status
+- `tickets` - Main ticket tracking
+
+### Setup:
+1. Database schema is managed through Flask-Migrate
+2. See `database_docs/schema.sql` for raw SQL structure
+3. Run migrations: `flask db upgrade`
+
+### Default Data:
+- Statuses: Pending, In Progress, Resolved, Closed
+- Categories: IT Support, Facilities, Electrical, Plumbing, HVAC

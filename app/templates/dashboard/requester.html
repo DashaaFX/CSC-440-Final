@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Requester – Tickets{% endblock %}
+{% block content %}
+<div class="layout-dashboard">
+  <section class="card filter">
+    <h2>Filters</h2>
+    <form method="get" class="form">
+      <div class="form-grid">
+        <div class="form-row">
+          <label for="q">Keyword</label>
+          <input id="q" name="q" class="input" placeholder="Search title or description" value="{{ keyword or '' }}">
+        </div>
+        <div class="form-row">
+          <label for="category">Category</label>
+          <select id="category" name="category_id" class="select">
+            <option value="">All</option>
+            {% for c in categories %}
+              <option value="{{ c.category_id }}" {% if category_id==c.category_id %}selected{% endif %}>{{ c.category_name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="statusFilter">Status</label>
+          <select id="statusFilter" name="status" class="select" aria-label="Filter tickets by status">
+            <option value="">All</option>
+            {% for s in statuses %}
+              <option value="{{ s.status_name }}" {% if status_filter==s.status_name %}selected{% endif %}>{{ s.status_name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="start">Start date</label>
+          <input id="start" name="start" type="date" class="input" value="{{ start_date or '' }}">
+        </div>
+        <div class="form-row">
+          <label for="end">End date</label>
+          <input id="end" name="end" type="date" class="input" value="{{ end_date or '' }}">
+        </div>
+        <div class="form-row">
+          <label for="sort">Sort by</label>
+          <select id="sort" name="sort" class="select">
+            <option value="created_desc" {% if sort=='created_desc' %}selected{% endif %}>Newest first</option>
+            <option value="created_asc" {% if sort=='created_asc' %}selected{% endif %}>Oldest first</option>
+            <option value="status" {% if sort=='status' %}selected{% endif %}>Status</option>
+            <option value="category" {% if sort=='category' %}selected{% endif %}>Category</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn" type="submit">Apply</button>
+        <a class="btn-outline" href="{{ url_for('dashboard.requester_dashboard') }}">Reset</a>
+      </div>
+    </form>
+    <hr style="border:0; border-top:1px solid var(--border); margin:16px 0;">
+    <p style="font-size:0.8rem; color:var(--muted); line-height:1.4;">Filter tickets you have submitted. Click any title for full details, to comment, or rate when resolved.</p>
+  </section>
+
+  <section class="card">
+  <div class="card-header">
+    <h2>My Tickets</h2>
+    <div class="actions">
+      <a class="btn" href="{{ url_for('tickets.new_ticket') }}">Create Ticket</a>
+    </div>
+  </div>
+  <div class="card-meta">{{ pagination.total }} total{% if status_filter %} • Status: {{ status_filter }}{% endif %}{% if keyword %} • Keyword: "{{ keyword }}"{% endif %}{% if category_id %} • Category: {{ categories|selectattr('category_id','equalto',category_id)|map(attribute='category_name')|list|join(', ') }}{% endif %}{% if start_date or end_date %} • Date: {{ start_date or '—' }} to {{ end_date or '—' }}{% endif %}{% if sort %} • Sort: {{ sort }}{% endif %}</div>
+  <div class="table-wrapper">
+  <table class="table" role="table" aria-label="List of your tickets">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Assigned To</th>
+        <th>Status</th>
+        <th>Created</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if tickets %}
+      {% for t in tickets %}
+      <tr>
+        <td>{{ t.ticket_id }}</td>
+        <td><a href="{{ url_for('tickets.ticket_detail', ticket_id=t.ticket_id) }}">{{ t.title }}</a></td>
+        <td>{% if t.technician %}<span class="badge">{{ t.technician.first_name }}</span>{% else %}Unassigned{% endif %}</td>
+        <td><span class="badge badge-{{ t.status.status_name|lower|replace(' ', '-') }}">{{ t.status.status_name if t.status else '—' }}</span></td>
+        <td>{{ t.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+      </tr>
+      {% endfor %}
+      {% else %}
+      <tr><td colspan="5" style="text-align:center; color: var(--muted);">No tickets found for the selected filter.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+  </div>
+  {% if pagination.pages > 1 %}
+  <div class="pagination">
+    {% if pagination.has_prev %}
+      <a class="page-link" href="{{ url_for('dashboard.requester_dashboard', q=keyword, category_id=category_id, status=status_filter, start=start_date, end=end_date, sort=sort, page=pagination.page-1) }}">Prev</a>
+    {% endif %}
+    <span class="page-status">Page {{ pagination.page }} / {{ pagination.pages }}</span>
+    {% if pagination.has_next %}
+      <a class="page-link" href="{{ url_for('dashboard.requester_dashboard', q=keyword, category_id=category_id, status=status_filter, start=start_date, end=end_date, sort=sort, page=pagination.page+1) }}">Next</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</section>
+</div>
+{% endblock %}

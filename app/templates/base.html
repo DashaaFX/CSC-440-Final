@@ -6,20 +6,57 @@
     <title>{% block title %}Campus Work Order System{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
-    <nav>
-        <a href="/">Home</a> |
-        <a href="#">Login</a> |
-        <a href="#">Register</a>
-    </nav>
-
-    <main>
-        {% block content %}{% endblock %}
-    </main>
-
-    <hr>
-    <footer>
-        <p>Campus Work Order System</p>
-    </footer>
-</body>
+        <body class="layout">
+                <nav class="navbar">
+                        {% if current_user.is_authenticated %}
+                                {% set dash_endpoint =
+                                        'dashboard.requester_dashboard' if current_user.role.value == 'requester' else
+                                        ('dashboard.technician_dashboard' if current_user.role.value == 'technician' else
+                                         ('dashboard.manager_dashboard' if current_user.role.value == 'manager' else 'index')) %}
+                                <a class="brand" href="{{ url_for(dash_endpoint) }}">Campus Work Orders</a>
+                                {% if current_user.role.value == 'requester' %}
+                                        <a class="nav-link" href="{{ url_for('tickets.new_ticket') }}">Create Ticket</a>
+                                {% elif current_user.role.value == 'manager' %}
+                                        <a class="nav-link" href="{{ url_for('reports.manager_reports') }}">Reports</a>
+                                {% endif %}
+                                <span class="nav-spacer"></span>
+                                <span class="nav-user">Hi, {{ current_user.first_name }}</span>
+                                <a class="btn btn-outline" href="{{ url_for('auth.logout') }}">Logout</a>
+                        {% else %}
+                                <a class="brand" href="{{ url_for('index') }}">Campus Work Orders</a>
+                                <span class="nav-spacer"></span>
+                                <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+                                <a class="btn" href="{{ url_for('auth.register') }}">Register</a>
+                        {% endif %}
+                </nav>
+                <main class="container">
+                        {% block content %}{% endblock %}
+                </main>
+                <footer class="footer">
+                        <div class="footer-inner">
+                                <span>2025 Campus Work Order System</span>
+                                <span class="footer-sep">•</span>
+                                <span>Group 5</span>
+                        </div>
+                </footer>
+                <!-- Toasts -->
+                <div id="toast-container" class="toast-container">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                                {% for category, message in messages %}
+                                        <div class="toast toast-{{ category }}" role="alert" aria-live="assertive">{{ message }}</div>
+                                {% endfor %}
+                        {% endwith %}
+                </div>
+                <script>
+                        (function(){
+                                const toasts = document.querySelectorAll('#toast-container .toast');
+                                toasts.forEach((t,i)=>{
+                                        setTimeout(()=>{t.classList.add('show');}, 50 + i*50);
+                                        const ttl = 4200 + i*200;
+                                        setTimeout(()=>{t.classList.add('fade');}, ttl);
+                                        setTimeout(()=>{t.remove();}, ttl + 600);
+                                });
+                        })();
+                </script>
+        </body>
 </html>

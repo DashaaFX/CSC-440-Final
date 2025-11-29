@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<section class="card auth-card">
+  <h2>Register</h2>
+  <form method="post" class="form form-register" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="form-grid">
+      <div class="form-row">
+        <label>{{ form.first_name.label }}</label>
+        {{ form.first_name(class_='input') }}
+      </div>
+      <div class="form-row">
+        <label>{{ form.last_name.label }}</label>
+        {{ form.last_name(class_='input') }}
+      </div>
+      <div class="form-row span-2">
+        <label>{{ form.email.label }}</label>
+        {{ form.email(class_='input') }}
+      </div>
+      <div class="form-row span-2">
+        <label>{{ form.password.label }}</label>
+        {{ form.password(class_='input') }}
+      </div>
+      <div class="form-row span-2">
+        <label>{{ form.role.label }}</label>
+        {{ form.role(class_='select') }}
+      </div>
+    </div>
+    <div class="form-actions" style="justify-content:space-between; margin-top:var(--space-4);">
+      <a class="btn-outline" href="{{ url_for('auth.login') }}">Login</a>
+      <button class="btn" type="submit">Create Account</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

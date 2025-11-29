@@ -46,6 +46,48 @@ CREATE TABLE tickets (
     FOREIGN KEY (technician_id) REFERENCES users(user_id)
 );
 
+-- Comments table Technicians and Requesters add comments to tickets
+CREATE TABLE comments (
+    comment_id INT AUTO_INCREMENT PRIMARY KEY,
+    ticket_id INT NOT NULL,
+    user_id INT NOT NULL,
+    comment_text TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (ticket_id) REFERENCES tickets(ticket_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    
+    INDEX idx_comments_ticket_id (ticket_id),
+    INDEX idx_comments_user_id (user_id)
+);
+
+
+-- Ratings table Requester rates resolved tickets
+CREATE TABLE ratings (
+    rating_id INT AUTO_INCREMENT PRIMARY KEY,
+    ticket_id INT NOT NULL UNIQUE, 
+    rating_value INT NOT NULL CHECK (rating_value BETWEEN 1 AND 5),
+    feedback TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (ticket_id) REFERENCES tickets(ticket_id) ON DELETE CASCADE,
+    
+    INDEX idx_ratings_ticket_id (ticket_id)
+);
+
+-- Report log table Managers generate reports
+CREATE TABLE report_logs (
+    report_id INT AUTO_INCREMENT PRIMARY KEY,
+    manager_id INT NOT NULL,
+    report_type VARCHAR(50) NOT NULL,
+    generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (manager_id) REFERENCES users(user_id),
+    
+    INDEX idx_report_logs_manager_id (manager_id),
+    INDEX idx_report_logs_generated_at (generated_at)
+);
+
 -- Indexes
 CREATE INDEX idx_email ON users(email);
 CREATE INDEX idx_role ON users(role);

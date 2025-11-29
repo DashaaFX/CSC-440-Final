@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Manager – Tickets{% endblock %}
+{% block content %}
+<section class="card">
+  <h2>All Tickets</h2>
+  <form method="get" class="form" style="margin-bottom:12px;">
+    <div class="form-grid">
+      <div class="form-row">
+        <label>Keyword</label>
+        <input type="text" name="q" class="input" value="{{ keyword or '' }}" placeholder="Search title/description" />
+      </div>
+      <div class="form-row">
+        <label>Status</label>
+        <select name="status" class="select">
+          <option value="">All</option>
+          {% for s in statuses %}
+            <option value="{{ s.status_name }}" {% if status_filter==s.status_name %}selected{% endif %}>{{ s.status_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Show</label>
+        <select name="unassigned" class="select">
+          <option value="">All tickets</option>
+          <option value="1" {% if unassigned %}selected{% endif %}>Unassigned only</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Category</label>
+        <select name="category_id" class="select">
+          <option value="">All</option>
+          {% for c in categories %}
+            <option value="{{ c.category_id }}" {% if category_id==c.category_id %}selected{% endif %}>{{ c.category_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Start Date</label>
+        <input type="date" name="start" class="input" value="{{ start_date or '' }}" />
+      </div>
+      <div class="form-row">
+        <label>End Date</label>
+        <input type="date" name="end" class="input" value="{{ end_date or '' }}" />
+      </div>
+      <div class="form-row">
+        <label>Sort</label>
+        <select name="sort" class="select">
+          <option value="created_desc" {% if sort=='created_desc' %}selected{% endif %}>Newest first</option>
+          <option value="created_asc" {% if sort=='created_asc' %}selected{% endif %}>Oldest first</option>
+          <option value="status" {% if sort=='status' %}selected{% endif %}>Status</option>
+          <option value="category" {% if sort=='category' %}selected{% endif %}>Category</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn" type="submit">Apply</button>
+      <a class="btn-outline" href="{{ url_for('dashboard.manager_dashboard') }}">Reset</a>
+      <a class="btn-outline" href="{{ url_for('dashboard.manager_export_csv', status=status_filter, unassigned=unassigned, q=keyword, category_id=category_id, start=start_date, end=end_date, sort=sort) }}">Export CSV</a>
+    </div>
+  </form>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Technician</th>
+        <th>Assign/Reassign</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in tickets %}
+      <tr>
+        <td>{{ t.ticket_id }}</td>
+        <td><a href="{{ url_for('tickets.ticket_detail', ticket_id=t.ticket_id) }}">{{ t.title }}</a></td>
+        <td><span class="badge badge-{{ t.status.status_name|lower|replace(' ', '-') }}">{{ t.status.status_name if t.status else '—' }}</span></td>
+        <td>{{ t.technician.first_name if t.technician else 'Unassigned' }}</td>
+        <td>
+          <form method="post" action="{{ url_for('dashboard.manager_assign', ticket_id=t.ticket_id) }}" class="form" style="display:flex; gap:8px;">
+            <select name="technician_id" class="select">
+              <option value="">Select technician</option>
+              {% for tech in technicians %}
+              <option value="{{ tech.user_id }}" {% if t.technician and t.technician.user_id==tech.user_id %}selected{% endif %}>{{ tech.first_name }} {{ tech.last_name }}</option>
+              {% endfor %}
+            </select>
+            <button class="btn" type="submit">Assign</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if pagination.pages > 1 %}
+  <div class="pagination">
+    {% if pagination.has_prev %}
+      <a class="page-link" href="{{ url_for('dashboard.manager_dashboard', status=status_filter, unassigned=unassigned, q=keyword, category_id=category_id, start=start_date, end=end_date, sort=sort, page=pagination.page-1) }}">Prev</a>
+    {% endif %}
+    <span class="page-status">Page {{ pagination.page }} / {{ pagination.pages }}</span>
+    {% if pagination.has_next %}
+      <a class="page-link" href="{{ url_for('dashboard.manager_dashboard', status=status_filter, unassigned=unassigned, q=keyword, category_id=category_id, start=start_date, end=end_date, sort=sort, page=pagination.page+1) }}">Next</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

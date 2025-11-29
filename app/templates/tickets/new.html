@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}New Ticket{% endblock %}
+{% block content %}
+<section class="card">
+  <div class="card-header">
+    <h2>Create Ticket</h2>
+    <div class="actions">
+      <a class="btn-outline" href="{{ url_for('dashboard.requester_dashboard') }}">Back</a>
+    </div>
+  </div>
+  <p style="font-size:0.8rem; color:var(--muted); margin:4px 0 20px;">Provide a concise title, location, category and a detailed description of the issue.</p>
+  <form method="post" class="form" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="form-grid">
+      <div class="form-row">
+        <label for="titleField">{{ form.title.label.text }}</label>
+        {{ form.title(class_='input', id='titleField', placeholder='Printer jam') }}
+      </div>
+      <div class="form-row">
+        <label for="locationField">{{ form.location.label.text }}</label>
+        {{ form.location(class_='input', id='locationField', placeholder='Science Hall Lab 204') }}
+      </div>
+      <div class="form-row">
+        <label for="categoryField">{{ form.category_id.label.text }}</label>
+        {{ form.category_id(class_='select', id='categoryField') }}
+      </div>
+      <div class="form-row span-2">
+        <label for="descriptionField">{{ form.description.label.text }}</label>
+        {{ form.description(class_='textarea', id='descriptionField', placeholder='Describe the problem and any steps taken...') }}
+      </div>
+    </div>
+    <div class="form-actions" style="justify-content:space-between; margin-top:20px;">
+      <div style="display:flex; gap:10px;">
+        <a class="btn-outline" href="{{ url_for('tickets.my_tickets') }}">Cancel</a>
+        <button class="btn" type="submit">Submit Ticket</button>
+      </div>
+    </div>
+  </form>
+</section>
+{% endblock %}

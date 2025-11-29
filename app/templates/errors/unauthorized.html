@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Not Authorized{% endblock %}
+{% block content %}
+<section class="card" style="text-align:center;">
+  <h2>Not Authorized</h2>
+  <p>You don't have permission to view this page.</p>
+  <p style="margin-top:12px;">
+    <a class="btn" href="{{ url_for('index') }}">Return Home</a>
+  </p>
+</section>
+{% endblock %}

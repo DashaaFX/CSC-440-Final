@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}New Ticket{% endblock %}
+
+{% block content %}
+<h1>Submit a New Ticket</h1>
+
+<form method="GET">
+    <label>Title</label><br>
+    <input type="text" name="title" required><br><br>
+
+    <label>Description</label><br>
+    <textarea name="description" rows="4" required></textarea><br><br>
+
+    <label>Location</label><br>
+    <input type="text" name="location" required><br><br>
+
+    <label>Category</label><br>
+    <select name="category">
+        <option value="1">IT</option>
+        <option value="2">Facilities</option>
+        <option value="3">Electrical</option>
+        <option value="4">Plumbing</option>
+    </select><br><br>
+
+    <button type="submit">Submit Ticket</button>
+</form>
+
+<p><a href="/dashboard">Back to Dashboard</a></p>
+{% endblock %}

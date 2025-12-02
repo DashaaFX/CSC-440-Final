@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}My Tickets{% endblock %}
+
+{% block content %}
+<h1>My Tickets</h1>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Category</th>
+        <th>Created</th>
+    </tr>
+
+    <!-- examples for now-->
+    <tr>
+        <td>1</td>
+        <td>Water Fountain Broken</td>
+        <td>Pending</td>
+        <td>Facilities</td>
+        <td>2025-12-01</td>
+    </tr>
+
+    <tr>
+        <td>2</td>
+        <td>Swirbull Computer Not Working</td>
+        <td>In Progress</td>
+        <td>IT</td>
+        <td>2025-12-02</td>
+    </tr>
+</table>
+
+<p><a href="/dashboard">Back to Dashboard</a></p>
+{% endblock %}

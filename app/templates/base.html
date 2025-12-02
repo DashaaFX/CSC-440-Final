@@ -8,18 +8,19 @@
 </head>
 <body>
     <nav>
-        <a href="/">Home</a> |
-        <a href="#">Login</a> |
-        <a href="#">Register</a>
+        <a href="{{ url_for('index') }}">Home</a> |
+        <a href="{{ url_for('login') }}">Login</a> |
+        <a href="{{ url_for('register') }}">Register</a> |
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
     </nav>
+
 
     <main>
         {% block content %}{% endblock %}
     </main>
 
-    <hr>
     <footer>
-        <p>Campus Work Order System</p>
+        <p>Adelphi University</p>
     </footer>
 </body>
 </html>

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Campus Work Order{% endblock %}
+
+{% block content %}
+  <h1>Create Account</h1>
+
+  <form method="GET">
+    <p>
+      <label>First Name<br>
+        <input type="text" name="first_name" required>
+      </label>
+    </p>
+
+    <p>
+      <label>Last Name<br>
+        <input type="text" name="last_name" required>
+      </label>
+    </p>
+
+    <p>
+      <label>Email<br>
+        <input type="email" name="email" required>
+      </label>
+    </p>
+
+    <p>
+      <label>Password<br>
+        <input type="password" name="password" required>
+      </label>
+    </p>
+
+    <p>
+      <label>Role<br>
+        <select name="role" required>
+          <option value="requester">Requester</option>
+          <option value="technician">Technician</option>
+          <option value="manager">Manager</option>
+        </select>
+      </label>
+    </p>
+
+    <p>
+      <button type="submit">Register</button>
+    </p>
+  </form>
+
+  <p style="font-size: 0.9rem;">
+    Already registered? <a href="/login">Login here</a>.
+  </p>
+{% endblock %}

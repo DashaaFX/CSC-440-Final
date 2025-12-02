@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Campus Work Order{% endblock %}
+
+{% block content %}
+  <h1>Login</h1>
+
+
+  <form method="GET">
+    <p>
+      <label>Email<br>
+        <input type="email" name="email" required>
+      </label>
+    </p>
+
+    <p>
+      <label>Password<br>
+        <input type="password" name="password" required>
+      </label>
+    </p>
+
+    <p>
+      <label>Role<br>
+        <select name="role" required>
+          <option value="requester">Requester</option>
+          <option value="technician">Technician</option>
+          <option value="manager">Manager</option>
+        </select>
+      </label>
+    </p>
+
+    <p>
+      <button type="submit">Login</button>
+    </p>
+  </form>
+
+  <p style="font-size: 0.9rem;">
+    Don’t have an account? <a href="/register">Register here</a>.
+  </p>
+{% endblock %}

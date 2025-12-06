@@ -10,21 +10,25 @@ admins may modify and manage requests.
 - Plain HTML templates with Jinja2
 - Custom CSS for styling
 
-## Setup
+## Setup (Windows CMD)
 
 ```bash
-# create virtual environment
-python3 -m venv venv
-source venv/bin/activate  # on windows: venv\Scripts\activate
-
-# install dependencies
+python -m venv venv
+venv\Scripts\activate
 pip install -r requirements.txt
+set FLASK_APP=app.py
+flask db upgrade
+python app.py
 ```
 
-## Running
+## Setup (macOS)
 
 ```bash
-# run development server
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+export FLASK_APP=app.py
+flask db upgrade
 python3 app.py
 ```
 
@@ -32,42 +36,28 @@ The app will run on http://localhost:5001
 
 ## Current Features
 
-- Homepage with navigation
-- Login and Register links (non-functional placeholders)
+- Authentication and registration (requester by default)
+- Role-based dashboards: requester, technician, manager
+- Ticket submission (requester), technician status updates, manager 		assignment
+- Search & filtering: keyword, category, status, date range, sort (requester & manager)
+- CSV export of tickets (manager), with report logging
+- Comments on tickets (requester/technician), requester rating after resolution
 
 ## Database Schema
 
-The project uses MySQL with these tables below
+- Managed with Flask-Migrate from SQLAlchemy models
+- Default database: SQLite file `ticket_system.db` under instance folder
+- Optional: MySQL via `DATABASE_URL` (see `.env.example`)
+- See `database_docs/schema.sql` for raw SQL structure
 
-### Main Tables:
-- `users` - User authentication and roles
-- `categories` - Ticket categories (IT, Facilities, etc.)
-- `ticket_status` - Ticket workflow status
-- `tickets` - Main ticket tracking
-
-### Setup:
-1. Database schema is managed through Flask-Migrate
-2. See `database_docs/schema.sql` for raw SQL structure
-3. Run migrations: `flask db upgrade`
-
-### Default Data:
-- Statuses: Pending, In Progress, Resolved, Closed
-- Categories: IT Support, Facilities, Electrical, Plumbing, HVAC
-
-## Additional Notes (for teammates)
-
-- Env: copy `.env.example` → `.env` and set your MySQL creds (`DATABASE_URL=mysql+pymysql://user:pass@localhost:3306/dbname`).
-- Driver: install MySQL driver `pymysql` if missing.
-- DB init: run either `database/schema.sql` (creates + seeds) OR `flask db upgrade` (migrations). Do not run both.
-- Seed: ensure statuses/categories exist (from schema.sql or a seed step) to avoid empty dropdowns.
-
-## Feature Summary (Current)
-- Authentication & Registration (new users default to requester role)
-- Role-based dashboards: requester, technician, manager
-- Requester filtering: keyword, category, status, date range, sort options
-- Manager tools: view all tickets, filter (same set), assign technicians, CSV export
-- Technician workflow: linear status progression (Pending → In Progress → Resolved → Closed)
-
+### Main Tables
+- `users` — Accounts, password hash, role (requester/technician/manager)
+- `categories` — Ticket categories (IT Support, Facilities, etc.)
+- `ticket_status` — Workflow states (Pending, In Progress, Resolved, Closed)
+- `tickets` — Title, description, location, category/status, requester/technician, timestamps
+- `comments` — Per-ticket comments linked to users
+- `ratings` — Requester rating and feedback (one per ticket)
+- `report_logs` — Manager report generation audit entries
 
 ## Database Options
 Default: SQLite (`sqlite:///ticket_system.db`) if `DATABASE_URL` not set.
@@ -81,6 +71,14 @@ flask db migrate -m "describe change"
 flask db upgrade
 ```
 If you imported an existing schema manually, align with: `flask db stamp head` before first migrate.
+
+
+## Additional Notes (for teammates)
+
+- Env: copy `.env.example` → `.env` and set your MySQL creds (`DATABASE_URL=mysql+pymysql://user:pass@localhost:3306/dbname`).
+- Driver: install MySQL driver `pymysql` if missing.
+- DB init: run either `database/schema.sql` (creates + seeds) OR `flask db upgrade` (migrations). Do not run both.
+- Seed: ensure statuses/categories exist (from schema.sql or a seed step) to avoid empty dropdowns.
 
 
 ## Project Structure
@@ -101,17 +99,8 @@ migrations/     Alembic migration versions
 Manager dashboard button triggers `/dashboard/manager/export.csv` applying current filters and logging a `report_logs` row.
 
 ## Environment Variables
-`SECRET_KEY` (session security) | `DATABASE_URL` (override default DB).
+`SECRET_KEY` (session security) , `DATABASE_URL` (override default DB).
 
-## Quick Start (Windows CMD)
-```cmd
-python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
-set FLASK_APP=app.py
-flask db upgrade
-python app.py
-```
 
 ## Troubleshooting
 - Missing table error: run `flask db upgrade`.

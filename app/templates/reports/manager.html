@@ -6,30 +6,36 @@
   {% if tickets_per_tech_paginated['items'] %}
   <table class="table">
     <thead>
-      <tr><th>Technician</th><th>Resolved Tickets</th></tr>
+      <tr>
+        <th>Technician</th>
+        <th>Resolved Tickets</th>
+      </tr>
     </thead>
     <tbody>
       {% for tech_id, count in tickets_per_tech_paginated['items'] %}
-        <tr>
-          <td>{{ tech_map.get(tech_id, 'Unknown') }}</td>
-          <td>{{ count }}</td>
-        </tr>
+      <tr>
+        <td>{{ tech_map.get(tech_id, 'Unknown') }}</td>
+        <td>{{ count }}</td>
+      </tr>
       {% endfor %}
     </tbody>
   </table>
   {% if tickets_per_tech_paginated['pages'] > 1 %}
   <div class="pagination">
     {% if tickets_per_tech_paginated['has_prev'] %}
-      <a class="page-link" href="{{ url_for('reports.manager_reports', tech_page=tickets_per_tech_paginated.page-1, cat_page=category_paginated.page) }}">Prev</a>
+    <a class="page-link"
+      href="{{ url_for('reports.manager_reports', tech_page=tickets_per_tech_paginated.page-1, cat_page=category_paginated.page) }}">Prev</a>
     {% endif %}
-    <span class="page-status">Page {{ tickets_per_tech_paginated['page'] }} / {{ tickets_per_tech_paginated['pages'] }}</span>
+    <span class="page-status">Page {{ tickets_per_tech_paginated['page'] }} / {{ tickets_per_tech_paginated['pages']
+      }}</span>
     {% if tickets_per_tech_paginated['has_next'] %}
-      <a class="page-link" href="{{ url_for('reports.manager_reports', tech_page=tickets_per_tech_paginated.page+1, cat_page=category_paginated.page) }}">Next</a>
+    <a class="page-link"
+      href="{{ url_for('reports.manager_reports', tech_page=tickets_per_tech_paginated.page+1, cat_page=category_paginated.page) }}">Next</a>
     {% endif %}
   </div>
   {% endif %}
   {% else %}
-    <p style="color:var(--muted)">No resolved tickets yet.</p>
+  <p style="color:var(--muted)">No resolved tickets yet.</p>
   {% endif %}
 </section>
 
@@ -38,30 +44,35 @@
   {% if category_paginated['items'] %}
   <table class="table">
     <thead>
-      <tr><th>Category</th><th>Tickets</th></tr>
+      <tr>
+        <th>Category</th>
+        <th>Tickets</th>
+      </tr>
     </thead>
     <tbody>
       {% for cat_id, count in category_paginated['items'] %}
-        <tr>
-          <td>{{ cat_map.get(cat_id, 'Unknown') }}</td>
-          <td>{{ count }}</td>
-        </tr>
+      <tr>
+        <td>{{ cat_map.get(cat_id, 'Unknown') }}</td>
+        <td>{{ count }}</td>
+      </tr>
       {% endfor %}
     </tbody>
   </table>
   {% if category_paginated['pages'] > 1 %}
   <div class="pagination">
     {% if category_paginated['has_prev'] %}
-      <a class="page-link" href="{{ url_for('reports.manager_reports', tech_page=tickets_per_tech_paginated.page, cat_page=category_paginated.page-1) }}">Prev</a>
+    <a class="page-link"
+      href="{{ url_for('reports.manager_reports', tech_page=tickets_per_tech_paginated.page, cat_page=category_paginated.page-1) }}">Prev</a>
     {% endif %}
     <span class="page-status">Page {{ category_paginated['page'] }} / {{ category_paginated['pages'] }}</span>
     {% if category_paginated['has_next'] %}
-      <a class="page-link" href="{{ url_for('reports.manager_reports', tech_page=tickets_per_tech_paginated.page, cat_page=category_paginated.page+1) }}">Next</a>
+    <a class="page-link"
+      href="{{ url_for('reports.manager_reports', tech_page=tickets_per_tech_paginated.page, cat_page=category_paginated.page+1) }}">Next</a>
     {% endif %}
   </div>
   {% endif %}
   {% else %}
-    <p style="color:var(--muted)">No tickets yet.</p>
+  <p style="color:var(--muted)">No tickets yet.</p>
   {% endif %}
 </section>
 {% endblock %}

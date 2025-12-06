@@ -7,44 +7,47 @@
     <div class="actions"></div>
   </div>
   <div class="table-wrapper">
-  <table class="table" role="table" aria-label="Assigned tickets">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Status</th>
-        <th>Update</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for t in tickets %}
-      <tr>
-        <td>{{ t.ticket_id }}</td>
-        <td><a href="{{ url_for('tickets.ticket_detail', ticket_id=t.ticket_id) }}">{{ t.title }}</a></td>
-        <td><span class="badge badge-{{ t.status.status_name|lower|replace(' ', '-') }}">{{ t.status.status_name if t.status else '—' }}</span></td>
-        <td>
-          <form method="post" action="{{ url_for('dashboard.technician_update_status', ticket_id=t.ticket_id) }}" class="form" style="display:flex; gap:8px;">
-            <select name="status" class="select">
-              {% for s in statuses %}
-              <option value="{{ s.status_name }}" {% if t.status and t.status.status_name==s.status_name %}selected{% endif %}>{{ s.status_name }}</option>
-              {% endfor %}
-            </select>
-            <button class="btn" type="submit">Save</button>
-          </form>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    <table class="table" role="table" aria-label="Assigned tickets">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Status</th>
+          <th>Update</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in tickets %}
+        <tr>
+          <td>{{ t.ticket_id }}</td>
+          <td><a href="{{ url_for('tickets.ticket_detail', ticket_id=t.ticket_id) }}">{{ t.title }}</a></td>
+          <td><span class="badge badge-{{ t.status.status_name|lower|replace(' ', '-') }}">{{ t.status.status_name if
+              t.status else '—' }}</span></td>
+          <td>
+            <form method="post" action="{{ url_for('dashboard.technician_update_status', ticket_id=t.ticket_id) }}"
+              class="form" style="display:flex; gap:8px;">
+              <select name="status" class="select">
+                {% for s in statuses %}
+                <option value="{{ s.status_name }}" {% if t.status and t.status.status_name==s.status_name %}selected{%
+                  endif %}>{{ s.status_name }}</option>
+                {% endfor %}
+              </select>
+              <button class="btn" type="submit">Save</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
   {% if pagination.pages > 1 %}
   <div class="pagination">
     {% if pagination.has_prev %}
-      <a class="page-link" href="{{ url_for('dashboard.technician_dashboard', page=pagination.page-1) }}">Prev</a>
+    <a class="page-link" href="{{ url_for('dashboard.technician_dashboard', page=pagination.page-1) }}">Prev</a>
     {% endif %}
     <span class="page-status">Page {{ pagination.page }} / {{ pagination.pages }}</span>
     {% if pagination.has_next %}
-      <a class="page-link" href="{{ url_for('dashboard.technician_dashboard', page=pagination.page+1) }}">Next</a>
+    <a class="page-link" href="{{ url_for('dashboard.technician_dashboard', page=pagination.page+1) }}">Next</a>
     {% endif %}
   </div>
   {% endif %}

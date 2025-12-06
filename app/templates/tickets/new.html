@@ -8,7 +8,8 @@
       <a class="btn-outline" href="{{ url_for('dashboard.requester_dashboard') }}">Back</a>
     </div>
   </div>
-  <p style="font-size:0.8rem; color:var(--muted); margin:4px 0 20px;">Provide a concise title, location, category and a detailed description of the issue.</p>
+  <p style="font-size:0.8rem; color:var(--muted); margin:4px 0 20px;">Provide a concise title, location, category and a
+    detailed description of the issue.</p>
   <form method="post" class="form" novalidate>
     {{ form.hidden_tag() }}
     <div class="form-grid">
@@ -26,7 +27,7 @@
       </div>
       <div class="form-row span-2">
         <label for="descriptionField">{{ form.description.label.text }}</label>
-        {{ form.description(class_='textarea', id='descriptionField', placeholder='Describe the problem and any steps taken...') }}
+        {{ form.description(class_='textarea', id='descriptionField', placeholder='Describe the problem') }}
       </div>
     </div>
     <div class="form-actions" style="justify-content:space-between; margin-top:20px;">

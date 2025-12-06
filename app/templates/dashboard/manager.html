@@ -4,7 +4,7 @@
 <section class="card">
   <h2>All Tickets</h2>
   <form method="get" class="form" style="margin-bottom:12px;">
-    <div class="form-grid">
+    <div class="form-grid two-cols">
       <div class="form-row">
         <label>Keyword</label>
         <input type="text" name="q" class="input" value="{{ keyword or '' }}" placeholder="Search title/description" />
@@ -70,25 +70,31 @@
       </tr>
     </thead>
     <tbody>
-      {% for t in tickets %}
-      <tr>
-        <td>{{ t.ticket_id }}</td>
-        <td><a href="{{ url_for('tickets.ticket_detail', ticket_id=t.ticket_id) }}">{{ t.title }}</a></td>
-        <td><span class="badge badge-{{ t.status.status_name|lower|replace(' ', '-') }}">{{ t.status.status_name if t.status else '—' }}</span></td>
-        <td>{{ t.technician.first_name if t.technician else 'Unassigned' }}</td>
-        <td>
-          <form method="post" action="{{ url_for('dashboard.manager_assign', ticket_id=t.ticket_id) }}" class="form" style="display:flex; gap:8px;">
-            <select name="technician_id" class="select">
-              <option value="">Select technician</option>
-              {% for tech in technicians %}
-              <option value="{{ tech.user_id }}" {% if t.technician and t.technician.user_id==tech.user_id %}selected{% endif %}>{{ tech.first_name }} {{ tech.last_name }}</option>
-              {% endfor %}
-            </select>
-            <button class="btn" type="submit">Assign</button>
-          </form>
-        </td>
-      </tr>
-      {% endfor %}
+      {% if tickets and tickets|length > 0 %}
+        {% for t in tickets %}
+        <tr>
+          <td>{{ t.ticket_id }}</td>
+          <td><a href="{{ url_for('tickets.ticket_detail', ticket_id=t.ticket_id) }}">{{ t.title }}</a></td>
+          <td><span class="badge badge-{{ t.status.status_name|lower|replace(' ', '-') }}">{{ t.status.status_name if t.status else '—' }}</span></td>
+          <td>{{ t.technician.first_name if t.technician else 'Unassigned' }}</td>
+          <td>
+            <form method="post" action="{{ url_for('dashboard.manager_assign', ticket_id=t.ticket_id) }}" class="form" style="display:flex; gap:8px;">
+              <select name="technician_id" class="select">
+                <option value="">Select technician</option>
+                {% for tech in technicians %}
+                <option value="{{ tech.user_id }}" {% if t.technician and t.technician.user_id==tech.user_id %}selected{% endif %}>{{ tech.first_name }} {{ tech.last_name }}</option>
+                {% endfor %}
+              </select>
+              <button class="btn" type="submit">Assign</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="5" style="text-align:center; color:#666; padding:12px;">No matching tickets found for current filters.</td>
+        </tr>
+      {% endif %}
     </tbody>
   </table>
   {% if pagination.pages > 1 %}

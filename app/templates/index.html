@@ -8,17 +8,17 @@
     <p>Report issues. Track progress. Keep campus running.</p>
     <div style="margin-top:var(--space-4); display:flex; gap:var(--space-2); justify-content:center;">
         {% if not current_user.is_authenticated %}
-            <a class="btn-outline" href="{{ url_for('auth.login') }}">Login</a>
-            <a class="btn" href="{{ url_for('auth.register') }}">Register</a>
+        <a class="btn-outline" href="{{ url_for('auth.login') }}">Login</a>
+        <a class="btn" href="{{ url_for('auth.register') }}">Register</a>
         {% else %}
-                        {% set dash_endpoint =
-                            'dashboard.requester_dashboard' if current_user.role.value == 'requester' else
-                            ('dashboard.technician_dashboard' if current_user.role.value == 'technician' else
-                             ('dashboard.manager_dashboard' if current_user.role.value == 'manager' else 'index')) %}
-                        <a class="btn" href="{{ url_for(dash_endpoint) }}">Go to Dashboard</a>
-                        {% if current_user.role.value == 'requester' %}
-                            <a class="btn-outline" href="{{ url_for('tickets.new_ticket') }}">Create Ticket</a>
-                        {% endif %}
+        {% set dash_endpoint =
+        'dashboard.requester_dashboard' if current_user.role.value == 'requester' else
+        ('dashboard.technician_dashboard' if current_user.role.value == 'technician' else
+        ('dashboard.manager_dashboard' if current_user.role.value == 'manager' else 'index')) %}
+        <a class="btn" href="{{ url_for(dash_endpoint) }}">Go to Dashboard</a>
+        {% if current_user.role.value == 'requester' %}
+        <a class="btn-outline" href="{{ url_for('tickets.new_ticket') }}">Create Ticket</a>
+        {% endif %}
         {% endif %}
     </div>
 </section>

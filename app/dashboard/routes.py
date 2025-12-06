@@ -82,12 +82,42 @@ def requester_dashboard():
 @login_required
 @role_required(Role.technician)
 def technician_dashboard():
+    # Filters
+    status_filter = request.args.get('status')
+    keyword = request.args.get('q', type=str)
+    category_id = request.args.get('category_id', type=int)
+
     page = request.args.get('page', type=int, default=1)
     per_page = 10
-    q = Ticket.query.filter_by(technician_id=current_user.user_id).order_by(Ticket.created_at.desc())
+
+    q = Ticket.query.filter(Ticket.technician_id == current_user.user_id)
+
+    if status_filter:
+        status = TicketStatus.query.filter_by(status_name=status_filter).first()
+        if status:
+            q = q.filter(Ticket.status_id == status.status_id)
+
+    if category_id:
+        q = q.filter(Ticket.category_id == category_id)
+
+    if keyword:
+        like = f"%{keyword}%"
+        q = q.filter((Ticket.title.ilike(like)) | (Ticket.description.ilike(like)))
+
+    q = q.order_by(Ticket.created_at.desc())
+
     pagination = paginate(q, page, per_page)
-    statuses = TicketStatus.query.all()
-    return render_template('dashboard/technician.html', pagination=pagination, tickets=pagination['items'], statuses=statuses)
+    statuses = TicketStatus.query.order_by(TicketStatus.status_name.asc()).all()
+    from ..models import Category
+    categories = Category.query.order_by(Category.category_name.asc()).all()
+    return render_template('dashboard/technician.html',
+                           pagination=pagination,
+                           tickets=pagination['items'],
+                           statuses=statuses,
+                           categories=categories,
+                           status=status_filter,
+                           category_id=category_id,
+                           q=keyword)
 
 @dashboard_bp.route('/technician/<int:ticket_id>/status', methods=['POST'])
 @login_required

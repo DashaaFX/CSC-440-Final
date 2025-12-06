@@ -16,6 +16,7 @@ admins may modify and manage requests.
 python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
+mkdir instance
 set FLASK_APP=app.py
 flask db upgrade
 python app.py
@@ -27,6 +28,7 @@ python app.py
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+mkdir -p instance
 export FLASK_APP=app.py
 flask db upgrade
 python3 app.py
@@ -46,7 +48,7 @@ The app will run on http://localhost:5001
 ## Database Schema
 
 - Managed with Flask-Migrate from SQLAlchemy models
-- Default database: SQLite file `ticket_system.db` under instance folder
+- Default database: SQLite file `instance/ticket_system.db`
 - Optional: MySQL via `DATABASE_URL` (see `.env.example`)
 - See `database_docs/schema.sql` for raw SQL structure
 
@@ -60,7 +62,7 @@ The app will run on http://localhost:5001
 - `report_logs` — Manager report generation audit entries
 
 ## Database Options
-Default: SQLite (`sqlite:///ticket_system.db`) if `DATABASE_URL` not set.
+Default: SQLite (`sqlite:///instance/ticket_system.db`) if `DATABASE_URL` not set.
 MySQL: set `DATABASE_URL=mysql+pymysql://user:pass@localhost:3306/dbname` in `.env`.
 Do NOT mix running raw `schema.sql` and migrations on the same fresh DB. Choose one initialization path.
 
@@ -71,6 +73,13 @@ flask db migrate -m "describe change"
 flask db upgrade
 ```
 If you imported an existing schema manually, align with: `flask db stamp head` before first migrate.
+
+### Optional: Seed Defaults via Script
+If you want to ensure default statuses/categories outside migrations:
+```cmd
+set FLASK_APP=app.py
+python database\init_db.py
+```
 
 
 ## Additional Notes (for teammates)

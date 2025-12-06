@@ -1,6 +1,43 @@
 {% extends "base.html" %}
 {% block title %}Technician – Tickets{% endblock %}
 {% block content %}
+<section class="card filter">
+  <div class="card-header">
+    <h2>Filters</h2>
+  </div>
+  <form method="get" action="{{ url_for('dashboard.technician_dashboard') }}" class="form">
+    <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 12px;">
+      <div>
+        <label for="status">Status</label>
+        <select id="status" name="status" class="select">
+          <option value="">All</option>
+          {% for s in statuses %}
+          <option value="{{ s.status_name }}" {% if status==s.status_name %}selected{% endif %}>{{ s.status_name }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="category">Category</label>
+        <select id="category" name="category_id" class="select">
+          <option value="">All</option>
+          {% for c in categories %}
+          <option value="{{ c.category_id }}" {% if category_id==c.category_id %}selected{% endif %}>{{ c.category_name
+            }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="q">Search</label>
+        <input id="q" type="text" name="q" value="{{ q or '' }}" class="input" placeholder="Title or description">
+      </div>
+    </div>
+    <div style="margin-top:12px; display:flex; gap:8px;">
+      <button type="submit" class="btn">Apply</button>
+      <a class="btn-outline" href="{{ url_for('dashboard.technician_dashboard') }}">Clear</a>
+    </div>
+  </form>
+</section>
 <section class="card">
   <div class="card-header">
     <h2>Assigned Tickets</h2>

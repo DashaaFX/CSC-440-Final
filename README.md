@@ -10,6 +10,12 @@ admins may modify and manage requests.
 - Plain HTML templates with Jinja2
 - Custom CSS for styling
 
+
+## Build instructions:
+- Run 'bootstrap.cmd'  script in root directory of project.
+- It is an automated script that sets up virtual environment, installs dependencies, runs migrations, and starts the app. 
+- Below is a non-automated commands to run for both Windows and MacOS users. 
+
 ## Setup (Windows CMD)
 
 ```bash
